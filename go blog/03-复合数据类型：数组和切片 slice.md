@@ -148,7 +148,7 @@ func modify(a [2]int) {
 
 它的底层结构是这样的：
 
-![](https://gitee.com/cjh777/blog_pic/blob/master/slice_pic/slice1.png)
+![](https://gitee.com/cjh777/blog_pic/raw/672d0085c725d6a983423f05526a04809e6222d8/slice_pic/slice1.png)
 
 
 
