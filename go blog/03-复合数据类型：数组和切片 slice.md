@@ -148,9 +148,154 @@ func modify(a [2]int) {
 
 它的底层结构是这样的：
 
-![](https://github.com/cecil777/cecil777/blob/main/go_blog_pic/slice1.png?raw=true)
+![](https://gitee.com/cjh777/blog_pic/raw/672d0085c725d6a983423f05526a04809e6222d8/slice_pic/slice1.png)
 
+再来看一个例子，看看到底各部分都是什么意思。
 
+![](https://gitee.com/cjh777/blog_pic/raw/master/slice_pic/slice2.png)
+
+底层是一个包含 10 个整型元素的数组，data1 指向数组第 4 个元素，长度是 3，容量取到数组最后一个元素，是 7。data2 指向数组第 5 个元素，长度是 4，容量是 6。
+
+#### 创建切片
+
+创建切片有两种方式：
+
+第一种方式是基于数组创建：
+
+``` go
+// 基于数组创建切片
+var array = [...]int{1, 2, 3, 4, 5, 6, 7, 8}
+
+s1 := array[3:6]
+s2 := array[:5]
+s3 := array[4:]
+s4 := array[:]
+
+fmt.Printf("s1: %v\n", s1) // s1: [4 5 6]
+fmt.Printf("s2: %v\n", s2) // s2: [1 2 3 4 5]
+fmt.Printf("s3: %v\n", s3) // s3: [5 6 7 8]
+fmt.Printf("s4: %v\n", s4) // s4: [1 2 3 4 5 6 7 8]
+```
+
+第二种方式是使用内置函数 `make` 来创建：
+
+``` go
+// 使用 make 创建切片
+// len: 10, cap: 10
+a := make([]int, 10)
+// len: 10, cap: 15
+b := make([]int, 10, 15)
+
+fmt.Printf("a: %v, len: %d, cap: %d\n", a, len(a), cap(a))
+fmt.Printf("b: %v, len: %d, cap: %d\n", b, len(b), cap(b))
+```
+
+#### 使用切片
+
+**遍历**
+
+和遍历数组方法相同。
+
+``` go
+// 切片遍历
+for i, n := range s1 {
+	fmt.Println(i, n)
+}
+```
+
+**比较**
+
+不能使用 `==` 来测试两个 slice 是否有相同元素，但 slice 可以和 nil 比。slice
+类型的零值是 nil，表示没有对应的底层数组，而且长度和容量都是零。
+
+但也要注意，长度和容量都是零的，其值也并不一定是 nil。
+
+``` go
+// 比较
+var s []int
+fmt.Println(len(s) == 0, s == nil) // true true
+s = nil
+fmt.Println(len(s) == 0, s == nil) // true true
+s = []int(nil)
+fmt.Println(len(s) == 0, s == nil) // true true
+s = []int{}
+fmt.Println(len(s) == 0, s == nil) // true false
+```
+
+所以，判断 slice 是否为空，要用内置函数 `len`，而不是判断其是否为 nil。
+
+**追加元素**
+
+使用内置函数 `append`。
+
+``` go
+// 追加
+s5 := append(s4, 9)
+fmt.Printf("s5: %v\n", s5) // s5: [1 2 3 4 5 6 7 8 9]
+s6 := append(s4, 10, 11)
+fmt.Printf("s6: %v\n", s6) // s5: [1 2 3 4 5 6 7 8 10 11]
+```
+
+追加另一个切片，需要在另一个切片后面跟三个点。
+
+``` go
+// 追加另一个切片
+s7 := []int{12, 13}
+s7 = append(s7, s6...)
+fmt.Printf("s7: %v\n", s7) // s7: [12 13 1 2 3 4 5 6 7 8 10 11]
+```
+
+**复制**
+
+使用内置函数 `copy`。
+
+``` go
+// 复制
+s8 := []int{1, 2, 3, 4, 5}
+s9 := []int{5, 4, 3}
+s10 := []int{6}
+
+copy(s8, s9)
+fmt.Printf("s8: %v\n", s8) // s8: [5 4 3 4 5]
+copy(s10, s9)
+fmt.Printf("s10: %v\n", s10) // s10: [5]
+```
+
+#### 引用类型
+
+上文介绍数组时说过，数组属于值类型，所以在传参时会复制整个数组内容，如果数组很大的话，是很影响性能的。而传递切片只会复制切片本身，并不影响底层数组，是很高效的。
+
+``` go
+package main
+
+import "fmt"
+
+func main() {
+	s9 := []int{5, 4, 3}
+
+	// 传参
+	modify(s9)
+	fmt.Println("main: ", s9) // main:  [30 4 3]
+}
+
+func modify(a []int) {
+	a[0] = 30
+	fmt.Println("modify: ", a) // modify:  [30 4 3]
+}
+
+```
+
+在 `modify` 中修改的值会影响到 `main` 中。
+
+### 总结
+
+本文学习了复合数据类型的前两种：数组和切片。分别介绍了它们的创建，常用操作，以及函数间的传递。
+
+数组长度固定，是切片的基础；切片长度可变，多一个容量属性，其指针指向的底层结构就是数组。
+
+在函数传参过程中，数组如果很大的话，很影响效率，而切片则解决了这个问题，效率更高。
+
+在日常开发中，使用切片的频率会更高一些。
 
 
 
