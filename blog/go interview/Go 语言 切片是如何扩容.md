@@ -84,7 +84,7 @@ func main() {
 
 再来看一下直接**追加一个切片：**
 
-```go
+``` go
 package main
 
 import "fmt"
