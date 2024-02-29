@@ -271,7 +271,7 @@ func growslice(et *_type, old slice, cap int) slice {
 
 ### go1.18
 
-```go
+``` go
 // src/runtime/slice.go
 
 func growslice(et *_type, old slice, cap int) slice {
