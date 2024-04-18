@@ -15,9 +15,13 @@
 - 应聘岗位：Golang开发工程师
 ## 工作及教育经历
 ---
+- 厦门亿玩堂网络科技有限公司
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+2022-01~至今
+软件研发部-golang开发工程师、php开发工程师
 - 福建省花开传媒科技有限公司
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-2021-04~至今
+2021-04~2022-01
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 软件研发部-golang开发工程师
 - 厦门美城行动科技有限公司
@@ -30,11 +34,6 @@
 2019-03~2019-07
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 软件研发部-后端开发
-- 厦门通元微智能科技有限公司
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-2018-03~2018~11
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-软件研发部-软件测试
 - 三明学院
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 2014-09~2018-07
@@ -42,20 +41,38 @@
 计算机科学与技术
 ## 专业技能
 ---
-- 熟悉Golang，了解Java等编程语言
-- 了解Beego，Gin框架
+- 熟悉Golang、PHP，了解Java等编程语言
+- 了解Beego，Gin，thinkPHP框架
 - 熟悉MySQL数据库，了解MongoDB，Elasticsearch
 - 了解缓存系统Redis
 - 了解Git版本控制
 - 了解网络编程，TCP/IP协议
 - 了解React和Ant Design
+- 了解使用docker
+- 了解etcd锁
 ## 项目经历
+---
+1. 卡圈一番赏
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+PHP开发
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+2021-04~2022-01
+项目介绍：这个项目是自主研发的一番赏抽卡软件。其中主要有商户入驻，拆卡记录，直播，卡密机台信息展示。
+
+- 我的职责
+---
+1. tika APP
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+golang开发
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+2021-04~2022-01
+- 项目介绍：这个项目是自主研发的社交聊天APP。节日活动、榜单信息及奖励发放。
 ---
 1. 花开APP
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 golang开发
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-2021-04~至今
+2021-04~2022-01
 - 项目介绍：这个项目是自主研发的社交聊天APP。其中主要的功能包括动态广场、语音视频搭讪聊天、任务、个人信息设置以及充值提现等。采用经过封装的Gin框架，部分功能逐步拆分为微服务。数据库方面主要使用了MySQL、MongoDB和Elasticsearch，缓存方面使用Redis。
 
 - 我的职责：
