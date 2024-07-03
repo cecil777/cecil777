@@ -47,14 +47,14 @@ protoc --go_out=plugins=grpc:. helloworld.proto
 ``` go
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type GreeterClient interface {
-	// Sends a greeting
-	SayHello(ctx context.Context, in *HelloRequest, opts ...grpc.CallOption) (*HelloReply, error)
+ // Sends a greeting
+ SayHello(ctx context.Context, in *HelloRequest, opts ...grpc.CallOption) (*HelloReply, error)
 }
 
 // GreeterServer is the server API for Greeter service.
 type GreeterServer interface {
-	// Sends a greeting
-	SayHello(context.Context, *HelloRequest) (*HelloReply, error)
+ // Sends a greeting
+ SayHello(context.Context, *HelloRequest) (*HelloReply, error)
 }
 ```
 
@@ -66,41 +66,41 @@ type GreeterServer interface {
 package main
 
 import (
-	"context"
-	"fmt"
-	"grpc-server/proto"
-	"log"
-	"net"
+ "context"
+ "fmt"
+ "grpc-server/proto"
+ "log"
+ "net"
 
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/reflection"
+ "google.golang.org/grpc"
+ "google.golang.org/grpc/reflection"
 )
 
 type greeter struct {
 }
 
 func (*greeter) SayHello(ctx context.Context, req *proto.HelloRequest) (*proto.HelloReply, error) {
-	fmt.Println(req)
-	reply := &proto.HelloReply{Message: "hello"}
-	return reply, nil
+ fmt.Println(req)
+ reply := &proto.HelloReply{Message: "hello"}
+ return reply, nil
 }
 
 func main() {
-	lis, err := net.Listen("tcp", ":50051")
-	if err != nil {
-		log.Fatalf("failed to listen: %v", err)
-	}
+ lis, err := net.Listen("tcp", ":50051")
+ if err != nil {
+  log.Fatalf("failed to listen: %v", err)
+ }
 
-	server := grpc.NewServer()
-	// 注册 grpcurl 所需的 reflection 服务
-	reflection.Register(server)
-	// 注册业务服务
-	proto.RegisterGreeterServer(server, &greeter{})
+ server := grpc.NewServer()
+ // 注册 grpcurl 所需的 reflection 服务
+ reflection.Register(server)
+ // 注册业务服务
+ proto.RegisterGreeterServer(server, &greeter{})
 
-	fmt.Println("grpc server start ...")
-	if err := server.Serve(lis); err != nil {
-		log.Fatalf("failed to serve: %v", err)
-	}
+ fmt.Println("grpc server start ...")
+ if err := server.Serve(lis); err != nil {
+  log.Fatalf("failed to serve: %v", err)
+ }
 }
 ```
 
@@ -110,27 +110,27 @@ func main() {
 package main
 
 import (
-	"context"
-	"fmt"
-	"grpc-client/proto"
-	"log"
+ "context"
+ "fmt"
+ "grpc-client/proto"
+ "log"
 
-	"google.golang.org/grpc"
+ "google.golang.org/grpc"
 )
 
 func main() {
-	conn, err := grpc.Dial("localhost:50051", grpc.WithInsecure())
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer conn.Close()
+ conn, err := grpc.Dial("localhost:50051", grpc.WithInsecure())
+ if err != nil {
+  log.Fatal(err)
+ }
+ defer conn.Close()
 
-	client := proto.NewGreeterClient(conn)
-	reply, err := client.SayHello(context.Background(), &proto.HelloRequest{Name: "zhangsan"})
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Println(reply.Message)
+ client := proto.NewGreeterClient(conn)
+ reply, err := client.SayHello(context.Background(), &proto.HelloRequest{Name: "zhangsan"})
+ if err != nil {
+  log.Fatal(err)
+ }
+ fmt.Println(reply.Message)
 }
 ```
 
@@ -161,23 +161,23 @@ service Greeter {
 
 ``` go
 func (*greeter) SayHelloStream(stream proto.Greeter_SayHelloStreamServer) error {
-	for {
-		args, err := stream.Recv()
-		if err != nil {
-			if err == io.EOF {
-				return nil
-			}
-			return err
-		}
+ for {
+  args, err := stream.Recv()
+  if err != nil {
+   if err == io.EOF {
+    return nil
+   }
+   return err
+  }
 
-		fmt.Println("Recv: " + args.Name)
-		reply := &proto.HelloReply{Message: "hi " + args.Name}
+  fmt.Println("Recv: " + args.Name)
+  reply := &proto.HelloReply{Message: "hi " + args.Name}
 
-		err = stream.Send(reply)
-		if err != nil {
-			return err
-		}
-	}
+  err = stream.Send(reply)
+  if err != nil {
+   return err
+  }
+ }
 }
 ```
 
@@ -191,29 +191,29 @@ client := proto.NewGreeterClient(conn)
 // 流处理
 stream, err := client.SayHelloStream(context.Background())
 if err != nil {
-	log.Fatal(err)
+ log.Fatal(err)
 }
 
 // 发送消息
 go func() {
-	for {
-		if err := stream.Send(&proto.HelloRequest{Name: "zhangsan"}); err != nil {
-			log.Fatal(err)
-		}
-		time.Sleep(time.Second)
-	}
+ for {
+  if err := stream.Send(&proto.HelloRequest{Name: "zhangsan"}); err != nil {
+   log.Fatal(err)
+  }
+  time.Sleep(time.Second)
+ }
 }()
 
 // 接收消息
 for {
-	reply, err := stream.Recv()
-	if err != nil {
-		if err == io.EOF {
-			break
-		}
-		log.Fatal(err)
-	}
-	fmt.Println(reply.Message)
+ reply, err := stream.Recv()
+ if err != nil {
+  if err == io.EOF {
+   break
+  }
+  log.Fatal(err)
+ }
+ fmt.Println(reply.Message)
 }
 ```
 
@@ -291,16 +291,16 @@ grpc_validator "github.com/grpc-ecosystem/go-grpc-middleware/validator"
 
 ``` go
 server := grpc.NewServer(
-	grpc.UnaryInterceptor(
-		grpc_middleware.ChainUnaryServer(
-			grpc_validator.UnaryServerInterceptor(),
-		),
-	),
-	grpc.StreamInterceptor(
-		grpc_middleware.ChainStreamServer(
-			grpc_validator.StreamServerInterceptor(),
-		),
-	),
+ grpc.UnaryInterceptor(
+  grpc_middleware.ChainUnaryServer(
+   grpc_validator.UnaryServerInterceptor(),
+  ),
+ ),
+ grpc.StreamInterceptor(
+  grpc_middleware.ChainStreamServer(
+   grpc_validator.StreamServerInterceptor(),
+  ),
+ ),
 )
 ```
 
@@ -323,26 +323,26 @@ exit status 1
 
 ``` go
 func Auth(ctx context.Context) error {
-	md, ok := metadata.FromIncomingContext(ctx)
-	if !ok {
-		return fmt.Errorf("missing credentials")
-	}
+ md, ok := metadata.FromIncomingContext(ctx)
+ if !ok {
+  return fmt.Errorf("missing credentials")
+ }
 
-	var user string
-	var password string
+ var user string
+ var password string
 
-	if val, ok := md["user"]; ok {
-		user = val[0]
-	}
-	if val, ok := md["password"]; ok {
-		password = val[0]
-	}
+ if val, ok := md["user"]; ok {
+  user = val[0]
+ }
+ if val, ok := md["password"]; ok {
+  password = val[0]
+ }
 
-	if user != "admin" || password != "admin" {
-		return grpc.Errorf(codes.Unauthenticated, "invalid token")
-	}
+ if user != "admin" || password != "admin" {
+  return grpc.Errorf(codes.Unauthenticated, "invalid token")
+ }
 
-	return nil
+ return nil
 }
 ```
 
@@ -353,15 +353,15 @@ func Auth(ctx context.Context) error {
 ``` go
 var authInterceptor grpc.UnaryServerInterceptor
 authInterceptor = func(
-	ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler,
+ ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler,
 ) (resp interface{}, err error) {
-	//拦截普通方法请求，验证 Token
-	err = Auth(ctx)
-	if err != nil {
-		return
-	}
-	// 继续处理请求
-	return handler(ctx, req)
+ //拦截普通方法请求，验证 Token
+ err = Auth(ctx)
+ if err != nil {
+  return
+ }
+ // 继续处理请求
+ return handler(ctx, req)
 }
 ```
 
@@ -369,17 +369,17 @@ authInterceptor = func(
 
 ``` go
 server := grpc.NewServer(
-	grpc.UnaryInterceptor(
-		grpc_middleware.ChainUnaryServer(
-			authInterceptor,
-			grpc_validator.UnaryServerInterceptor(),
-		),
-	),
-	grpc.StreamInterceptor(
-		grpc_middleware.ChainStreamServer(
-			grpc_validator.StreamServerInterceptor(),
-		),
-	),
+ grpc.UnaryInterceptor(
+  grpc_middleware.ChainUnaryServer(
+   authInterceptor,
+   grpc_validator.UnaryServerInterceptor(),
+  ),
+ ),
+ grpc.StreamInterceptor(
+  grpc_middleware.ChainStreamServer(
+   grpc_validator.StreamServerInterceptor(),
+  ),
+ ),
 )
 ```
 
@@ -413,18 +413,18 @@ type PerRPCCredentials interface {
 
 ``` go
 type Authentication struct {
-	User     string
-	Password string
+ User     string
+ Password string
 }
 
 func (a *Authentication) GetRequestMetadata(context.Context, ...string) (
-	map[string]string, error,
+ map[string]string, error,
 ) {
-	return map[string]string{"user": a.User, "password": a.Password}, nil
+ return map[string]string{"user": a.User, "password": a.Password}, nil
 }
 
 func (a *Authentication) RequireTransportSecurity() bool {
-	return false
+ return false
 }
 ```
 
@@ -494,8 +494,8 @@ openssl x509 -req -days 365 -in server.csr -signkey server.key -out server.crt
 // 证书认证-单向认证
 creds, err := credentials.NewServerTLSFromFile("keys/server.crt", "keys/server.key")
 if err != nil {
-	log.Fatal(err)
-	return
+ log.Fatal(err)
+ return
 }
 
 server := grpc.NewServer(grpc.Creds(creds))
@@ -509,8 +509,8 @@ server := grpc.NewServer(grpc.Creds(creds))
 // 证书认证-单向认证
 creds, err := credentials.NewClientTLSFromFile("keys/server.crt", "example.grpcdev.cn")
 if err != nil {
-	log.Fatal(err)
-	return
+ log.Fatal(err)
+ return
 }
 conn, err := grpc.Dial("localhost:50051", grpc.WithTransportCredentials(creds))
 ```
@@ -647,12 +647,12 @@ ca, _ := ioutil.ReadFile("cert/ca.pem")
 certPool.AppendCertsFromPEM(ca)
 // 构建基于 TLS 的 TransportCredentials 选项
 creds := credentials.NewTLS(&tls.Config{
-	// 设置证书链，允许包含一个或多个
-	Certificates: []tls.Certificate{cert},
-	// 要求必须校验客户端的证书。可以根据实际情况选用以下参数
-	ClientAuth: tls.RequireAndVerifyClientCert,
-	// 设置根证书的集合，校验方式使用 ClientAuth 中设定的模式
-	ClientCAs: certPool,
+ // 设置证书链，允许包含一个或多个
+ Certificates: []tls.Certificate{cert},
+ // 要求必须校验客户端的证书。可以根据实际情况选用以下参数
+ ClientAuth: tls.RequireAndVerifyClientCert,
+ // 设置根证书的集合，校验方式使用 ClientAuth 中设定的模式
+ ClientCAs: certPool,
 })
 ```
 
@@ -669,11 +669,11 @@ ca, _ := ioutil.ReadFile("cert/ca.pem")
 certPool.AppendCertsFromPEM(ca)
 // 构建基于 TLS 的 TransportCredentials 选项
 creds := credentials.NewTLS(&tls.Config{
-	// 设置证书链，允许包含一个或多个
-	Certificates: []tls.Certificate{cert},
-	// 要求必须校验客户端的证书。可以根据实际情况选用以下参数
-	ServerName: "www.example.grpcdev.cn",
-	RootCAs:    certPool,
+ // 设置证书链，允许包含一个或多个
+ Certificates: []tls.Certificate{cert},
+ // 要求必须校验客户端的证书。可以根据实际情况选用以下参数
+ ServerName: "www.example.grpcdev.cn",
+ RootCAs:    certPool,
 })
 ```
 

@@ -87,7 +87,7 @@ etcd-v3.2.28-darwin-amd64/
 切换到etcd安装目录，下面以Linux为例子
 
 ``` bash
-$ ./etcd
+./etcd
 ```
 
 打开命令窗口直接运行etcd程序，就可以启动默认配置的etcd服务器。
@@ -160,11 +160,11 @@ etcd集群部署，通常至少部署3个etcd节点(推荐奇数个节点)，下
 | 参数                            | 说明                                                                                         |
 |-------------------------------|--------------------------------------------------------------------------------------------|
 | --name                        | etcd节点名字                                                                                   |
-| --initial-cluster             | etcd启动的时候，通过这个配置找到其他ectd节点的地址列表，格式：'节点名字1=http://节点ip1:2380,节点名字1=http://节点ip1:2380,.....' |
+| --initial-cluster             | etcd启动的时候，通过这个配置找到其他ectd节点的地址列表，格式：'节点名字1=<http://节点ip1:2380,节点名字1=http://节点ip1:2380>,.....' |
 | --initial-cluster-state       | 初始化的时候，集群的状态 "new" 或者 "existing"两种状态，new代表新建的集群，existing表示加入已经存在的集群。                       |
-| --listen-client-urls          | 监听客户端请求的地址列表，格式：'http://localhost:2379', 多个用逗号分隔。                                          |
+| --listen-client-urls          | 监听客户端请求的地址列表，格式：'<http://localhost:2379>', 多个用逗号分隔。                                          |
 | --advertise-client-urls       | 如果--listen-client-urls配置了，多个监听客户端请求的地址，这个参数可以给出，建议客户端使用什么地址访问etcd。                         |
-| --listen-peer-urls            | 服务端节点之间通讯的监听地址，格式：'http://localhost:2380'                                                  |
+| --listen-peer-urls            | 服务端节点之间通讯的监听地址，格式：'<http://localhost:2380>'                                                  |
 | --initial-advertise-peer-urls | 建议服务端之间通讯使用的地址列表。                                                                          |
 
 ### 启动节点1
@@ -227,7 +227,7 @@ etcdctl最关键的参数就是etcd服务的地址是什么？
 例如：
 
 ``` bash
-$ etcdctl  --endpoints "http://127.0.0.1:2379,http://127.0.0.1:4001" 子命令
+etcdctl  --endpoints "http://127.0.0.1:2379,http://127.0.0.1:4001" 子命令
 ```
 
 如果你的etcd安装在本地，可以不需要手动指定--endpoints参数。
@@ -243,7 +243,7 @@ etcdctl set key value
 例子:
 
 ``` bash
-$ etcdctl set /config/name tizi365
+etcdctl set /config/name tizi365
 ```
 
 ### 读取key
@@ -274,7 +274,7 @@ etcdctl rm key
 例子：
 
 ``` bash
-$ etcdctl rm foo
+etcdctl rm foo
 ```
 
 ### 监听key
@@ -393,7 +393,7 @@ log.Fatal(err)
 
 通过Get函数，可以查询key的值
 
-``` go 
+``` go
 cli, err := clientv3.New(...省略...)
 if err != nil {
 log.Fatal(err)
@@ -474,6 +474,7 @@ if err != nil {
 ```
 
 ## Go etcd watch监控数据
+
 etcd的核心特性之一，就是我们可以监控key的数据变化，只要有人修改了key的值，我们都可以监控到变化的值。
 
 ### 监控指定Key

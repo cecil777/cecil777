@@ -152,73 +152,73 @@ map 进行加锁。
 package main
 
 import (
-	"fmt"
-	"sync"
+ "fmt"
+ "sync"
 )
 
 const N = 16
 
 type SafeMap struct {
-	maps  [N]map[string]string
-	locks [N]sync.RWMutex
+ maps  [N]map[string]string
+ locks [N]sync.RWMutex
 }
 
 func NewSafeMap() *SafeMap {
-	sm := new(SafeMap)
-	for i := 0; i < N; i++ {
-		sm.maps[i] = make(map[string]string)
-	}
-	return sm
+ sm := new(SafeMap)
+ for i := 0; i < N; i++ {
+  sm.maps[i] = make(map[string]string)
+ }
+ return sm
 }
 func (sm *SafeMap) ReadMap(key string) string {
-	index := hash(key) % N
-	sm.locks[index].RLock()
-	value := sm.maps[index][key]
-	sm.locks[index].RUnlock()
-	return value
+ index := hash(key) % N
+ sm.locks[index].RLock()
+ value := sm.maps[index][key]
+ sm.locks[index].RUnlock()
+ return value
 }
 
 func (sm *SafeMap) WriteMap(key string, value string) {
-	index := hash(key) % N
-	sm.locks[index].Lock()
-	sm.maps[index][key] = value
-	sm.locks[index].Unlock()
+ index := hash(key) % N
+ sm.locks[index].Lock()
+ sm.maps[index][key] = value
+ sm.locks[index].Unlock()
 }
 
 func hash(s string) int {
-	h := 0
-	for i := 0; i < len(s); i++ {
-		h = 31*h + int(s[i])
-	}
-	return h
+ h := 0
+ for i := 0; i < len(s); i++ {
+  h = 31*h + int(s[i])
+ }
+ return h
 }
 
 func main() {
-	safeMap := NewSafeMap()
+ safeMap := NewSafeMap()
 
-	var wg sync.WaitGroup
+ var wg sync.WaitGroup
 
-	// 启动多个goroutine进行写操作
-	for i := 0; i < 10; i++ {
-		wg.Add(1)
-		go func(i int) {
-			defer wg.Done()
-			safeMap.WriteMap(fmt.Sprintf("name%d", i), fmt.Sprintf("John%d", i))
-		}(i)
-	}
+ // 启动多个goroutine进行写操作
+ for i := 0; i < 10; i++ {
+  wg.Add(1)
+  go func(i int) {
+   defer wg.Done()
+   safeMap.WriteMap(fmt.Sprintf("name%d", i), fmt.Sprintf("John%d", i))
+  }(i)
+ }
 
-	wg.Wait()
+ wg.Wait()
 
-	// 启动多个goroutine进行读操作
-	for i := 0; i < 10; i++ {
-		wg.Add(1)
-		go func(i int) {
-			defer wg.Done()
-			fmt.Println(safeMap.ReadMap(fmt.Sprintf("name%d", i)))
-		}(i)
-	}
+ // 启动多个goroutine进行读操作
+ for i := 0; i < 10; i++ {
+  wg.Add(1)
+  go func(i int) {
+   defer wg.Done()
+   fmt.Println(safeMap.ReadMap(fmt.Sprintf("name%d", i)))
+  }(i)
+ }
 
-	wg.Wait()
+ wg.Wait()
 }
 ```
 
@@ -239,36 +239,36 @@ func main() {
 package main
 
 import (
-	"fmt"
-	"sync"
+ "fmt"
+ "sync"
 )
 
 func main() {
-	var m sync.Map
-	var wg sync.WaitGroup
+ var m sync.Map
+ var wg sync.WaitGroup
 
-	// 启动多个goroutine进行写操作
-	for i := 0; i < 10; i++ {
-		wg.Add(1)
-		go func(i int) {
-			defer wg.Done()
-			m.Store(fmt.Sprintf("name%d", i), fmt.Sprintf("John%d", i))
-		}(i)
-	}
+ // 启动多个goroutine进行写操作
+ for i := 0; i < 10; i++ {
+  wg.Add(1)
+  go func(i int) {
+   defer wg.Done()
+   m.Store(fmt.Sprintf("name%d", i), fmt.Sprintf("John%d", i))
+  }(i)
+ }
 
-	wg.Wait()
+ wg.Wait()
 
-	// 启动多个goroutine进行读操作
-	for i := 0; i < 10; i++ {
-		wg.Add(1)
-		go func(i int) {
-			defer wg.Done()
-			v, _ := m.Load(fmt.Sprintf("name%d", i))
-			fmt.Println(v.(string))
-		}(i)
-	}
+ // 启动多个goroutine进行读操作
+ for i := 0; i < 10; i++ {
+  wg.Add(1)
+  go func(i int) {
+   defer wg.Done()
+   v, _ := m.Load(fmt.Sprintf("name%d", i))
+   fmt.Println(v.(string))
+  }(i)
+ }
 
-	wg.Wait()
+ wg.Wait()
 }
 
 ```
@@ -292,4 +292,3 @@ Go 语言中的 map 本身并不是并发安全的。
 另一种方法是分片加锁，将这个 map 分成 n 块，每个块之间的读写操作都互不干扰，从而降低冲突的可能性。
 
 此外，在内置的 sync 包中（Go 1.9+）也有一个线程安全的 map，它通过将读写分离的方式实现了某些特定场景下的性能提升。
-

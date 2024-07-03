@@ -6,19 +6,19 @@
 package main
 
 import (
-	"fmt"
-	"io/ioutil"
-	"net/http"
-	"runtime"
+ "fmt"
+ "io/ioutil"
+ "net/http"
+ "runtime"
 )
 
 func main() {
-	num := 6
-	for index := 0; index < num; index++ {
-		resp, _ := http.Get("https://www.baidu.com")
-		_, _ = ioutil.ReadAll(resp.Body)
-	}
-	fmt.Printf("此时goroutine个数= %d\n", runtime.NumGoroutine())
+ num := 6
+ for index := 0; index < num; index++ {
+  resp, _ := http.Get("https://www.baidu.com")
+  _, _ = ioutil.ReadAll(resp.Body)
+ }
+ fmt.Printf("此时goroutine个数= %d\n", runtime.NumGoroutine())
 
 
 }
@@ -45,10 +45,10 @@ http.Get()
 // 以上代码在 go/1.12.7/libexec/src/net/http/client:174 
 
 func (c *Client) transport() RoundTripper {
-	if c.Transport != nil {
-		return c.Transport
-	}
-	return DefaultTransport
+ if c.Transport != nil {
+  return c.Transport
+ }
+ return DefaultTransport
 }
 ```
 
@@ -75,9 +75,9 @@ func (t *Transport) roundTrip(req *Request)
 func (t *Transport) getConn(treq *transportRequest, cm connectMethod)
 func (t *Transport) dialConn(ctx context.Context, cm connectMethod) (*persistConn, error) {
     ...
-	go pconn.readLoop()  // 启动一个读goroutine
-	go pconn.writeLoop() // 启动一个写goroutine
-	return pconn, nil
+ go pconn.readLoop()  // 启动一个读goroutine
+ go pconn.writeLoop() // 启动一个写goroutine
+ return pconn, nil
 }
 ```
 
@@ -90,34 +90,34 @@ func (t *Transport) dialConn(ctx context.Context, cm connectMethod) (*persistCon
 
 ``` go
 func (pc *persistConn) readLoop() {
-	alive := true
-	for alive {
+ alive := true
+ for alive {
         ...
-		// Before looping back to the top of this function and peeking on
-		// the bufio.Reader, wait for the caller goroutine to finish
-		// reading the response body. (or for cancelation or death)
-		select {
-		case bodyEOF := <-waitForBodyRead:
-			pc.t.setReqCanceler(rc.req, nil) // before pc might return to idle pool
-			alive = alive &&
-				bodyEOF &&
-				!pc.sawEOF &&
-				pc.wroteRequest() &&
-				tryPutIdleConn(trace)
-			if bodyEOF {
-				eofc <- struct{}{}
-			}
-		case <-rc.req.Cancel:
-			alive = false
-			pc.t.CancelRequest(rc.req)
-		case <-rc.req.Context().Done():
-			alive = false
-			pc.t.cancelRequest(rc.req, rc.req.Context().Err())
-		case <-pc.closech:
-			alive = false
+  // Before looping back to the top of this function and peeking on
+  // the bufio.Reader, wait for the caller goroutine to finish
+  // reading the response body. (or for cancelation or death)
+  select {
+  case bodyEOF := <-waitForBodyRead:
+   pc.t.setReqCanceler(rc.req, nil) // before pc might return to idle pool
+   alive = alive &&
+    bodyEOF &&
+    !pc.sawEOF &&
+    pc.wroteRequest() &&
+    tryPutIdleConn(trace)
+   if bodyEOF {
+    eofc <- struct{}{}
+   }
+  case <-rc.req.Cancel:
+   alive = false
+   pc.t.CancelRequest(rc.req)
+  case <-rc.req.Context().Done():
+   alive = false
+   pc.t.cancelRequest(rc.req, rc.req.Context().Err())
+  case <-pc.closech:
+   alive = false
         }
         ...
-	}
+ }
 }
 ```
 
@@ -136,30 +136,29 @@ bodyEOF 来源于到一个通道 waitForBodyRead，这个字段的 true 和 fals
 
 **那么这个通道的值是从哪里过来的呢？**
 
-
 ``` go
 // go/1.12.7/libexec/src/net/http/transport.go: 1758
-		body := &bodyEOFSignal{
-			body: resp.Body,
-			earlyCloseFn: func() error {
-				waitForBodyRead <- false
-				<-eofc // will be closed by deferred call at the end of the function
-				return nil
+  body := &bodyEOFSignal{
+   body: resp.Body,
+   earlyCloseFn: func() error {
+    waitForBodyRead <- false
+    <-eofc // will be closed by deferred call at the end of the function
+    return nil
 
-			},
-			fn: func(err error) error {
-				isEOF := err == io.EOF
-				waitForBodyRead <- isEOF
-				if isEOF {
-					<-eofc // see comment above eofc declaration
-				} else if err != nil {
-					if cerr := pc.canceled(); cerr != nil {
-						return cerr
-					}
-				}
-				return err
-			},
-		}
+   },
+   fn: func(err error) error {
+    isEOF := err == io.EOF
+    waitForBodyRead <- isEOF
+    if isEOF {
+     <-eofc // see comment above eofc declaration
+    } else if err != nil {
+     if cerr := pc.canceled(); cerr != nil {
+      return cerr
+     }
+    }
+    return err
+   },
+  }
 ```
 
 - 如果执行 earlyCloseFn ，waitForBodyRead 通道输入的是 false，alive 也会是 false，那 readLoop() 这个 goroutine 就会退出。
@@ -180,17 +179,17 @@ func (t *Transport) tryPutIdleConn(pconn *persistConn) error
 
 ``` go
 func (es *bodyEOFSignal) Close() error {
-	es.mu.Lock()
-	defer es.mu.Unlock()
-	if es.closed {
-		return nil
-	}
-	es.closed = true
-	if es.earlyCloseFn != nil && es.rerr != io.EOF {
-		return es.earlyCloseFn() // 关闭时执行 earlyCloseFn
-	}
-	err := es.body.Close()
-	return es.condfn(err)
+ es.mu.Lock()
+ defer es.mu.Unlock()
+ if es.closed {
+  return nil
+ }
+ es.closed = true
+ if es.earlyCloseFn != nil && es.rerr != io.EOF {
+  return es.earlyCloseFn() // 关闭时执行 earlyCloseFn
+ }
+ err := es.body.Close()
+ return es.condfn(err)
 }
 ```
 
@@ -205,11 +204,11 @@ b, err = ioutil.ReadAll(resp.Body)
 
 // go/1.12.7/libexec/src/bytes/buffer.go:207
 func (b *Buffer) ReadFrom(r io.Reader) (n int64, err error) {
-	for {
-		...
-		m, e := r.Read(b.buf[i:cap(b.buf)])  // 看这里，是body在执行read方法
-		...
-	}
+ for {
+  ...
+  m, e := r.Read(b.buf[i:cap(b.buf)])  // 看这里，是body在执行read方法
+  ...
+ }
 }
 ```
 
@@ -217,24 +216,24 @@ func (b *Buffer) ReadFrom(r io.Reader) (n int64, err error) {
 
 ``` go
 func (es *bodyEOFSignal) Read(p []byte) (n int, err error) {
-	...
-	n, err = es.body.Read(p)
-	if err != nil {
-		... 
+ ...
+ n, err = es.body.Read(p)
+ if err != nil {
+  ... 
     // 这里会有一个io.EOF的报错，意思是读完了
-		err = es.condfn(err)
-	}
-	return
+  err = es.condfn(err)
+ }
+ return
 }
 
 
 func (es *bodyEOFSignal) condfn(err error) error {
-	if es.fn == nil {
-		return err
-	}
-	err = es.fn(err)  // 这了执行了 fn
-	es.fn = nil
-	return err
+ if es.fn == nil {
+  return err
+ }
+ err = es.fn(err)  // 这了执行了 fn
+ es.fn = nil
+ return err
 }
 ```
 
@@ -245,4 +244,3 @@ func (es *bodyEOFSignal) condfn(err error) error {
 - 所以结论呼之欲出了，虽然执行了 6 次循环，而且每次都没有执行 Body.Close() ,就是因为执行了ioutil.ReadAll()把内容都读出来了，连接得以复用，因此只泄漏了一个读goroutine和一个写goroutine，最后加上main goroutine，所以答案就是3个goroutine。
 - 从另外一个角度说，正常情况下我们的代码都会执行 ioutil.ReadAll()，但如果此时忘了 resp.Body.Close()，确实会导致泄漏。但如果你调用的域名一直是同一个的话，那么只会泄漏一个 读goroutine 和一个写goroutine，这就是为什么代码明明不规范但却看不到明显内存泄漏的原因。
 - 那么问题又来了，为什么上面要特意强调是同一个域名呢？改天，回头，以后有空再说吧。
-

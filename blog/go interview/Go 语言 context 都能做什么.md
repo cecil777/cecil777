@@ -31,10 +31,10 @@ type Context interface {
 
 包含四个方法：
 
-*   `Done()`：返回一个 channel，当 times out 或者调用 cancel 方法时。
-*   `Err()`：返回一个错误，表示取消 ctx 的原因。
-*   `Deadline()`：返回截止时间和一个 bool 值。
-*   `Value()`：返回 key 对应的值。
+* `Done()`：返回一个 channel，当 times out 或者调用 cancel 方法时。
+* `Err()`：返回一个错误，表示取消 ctx 的原因。
+* `Deadline()`：返回截止时间和一个 bool 值。
+* `Value()`：返回 key 对应的值。
 
 有四个结构体实现了这个接口，分别是：`emptyCtx`, `cancelCtx`, `timerCtx` 和 `valueCtx`。
 
@@ -60,10 +60,10 @@ func WithValue(parent Context, key, val interface{}) Context
 
 在使用 Context 时，要遵循以下四点规则：
 
-1.  不要将 Context 放入结构体，而是应该作为第一个参数传入，命名为 `ctx`。
-2.  即使函数允许，也不要传入 `nil` 的 Context。如果不知道用哪种 Context，可以使用 `context.TODO()`。
-3.  使用 Context 的 Value 相关方法只应该用于在程序和接口中传递和请求相关的元数据，不要用它来传递一些可选的参数。
-4.  相同的 Context 可以传递给不同的 goroutine；Context 是并发安全的。
+1. 不要将 Context 放入结构体，而是应该作为第一个参数传入，命名为 `ctx`。
+2. 即使函数允许，也不要传入 `nil` 的 Context。如果不知道用哪种 Context，可以使用 `context.TODO()`。
+3. 使用 Context 的 Value 相关方法只应该用于在程序和接口中传递和请求相关的元数据，不要用它来传递一些可选的参数。
+4. 相同的 Context 可以传递给不同的 goroutine；Context 是并发安全的。
 
 ## WithCancel
 

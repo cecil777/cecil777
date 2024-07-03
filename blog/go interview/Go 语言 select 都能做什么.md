@@ -44,30 +44,30 @@ default:
 package main
 
 import (
-	"fmt"
-	"time"
+ "fmt"
+ "time"
 )
 
 func main() {
-	c1 := make(chan string)
-	c2 := make(chan string)
+ c1 := make(chan string)
+ c2 := make(chan string)
 
-	go func() {
-		time.Sleep(3 * time.Second)
-		c1 <- "one"
-	}()
+ go func() {
+  time.Sleep(3 * time.Second)
+  c1 <- "one"
+ }()
 
-	go func() {
-		time.Sleep(3 * time.Second)
-		c2 <- "two"
-	}()
+ go func() {
+  time.Sleep(3 * time.Second)
+  c2 <- "two"
+ }()
 
-	select {
-	case msg := <-c1:
-		fmt.Println(msg)
-	case msg := <-c2:
-		fmt.Println(msg)
-	}
+ select {
+ case msg := <-c1:
+  fmt.Println(msg)
+ case msg := <-c2:
+  fmt.Println(msg)
+ }
 }
 ```
 
@@ -83,18 +83,18 @@ func main() {
 package main
 
 import (
-	"fmt"
+ "fmt"
 )
 
 func main() {
-	channel := make(chan int)
+ channel := make(chan int)
 
-	select {
-	case data := <-channel:
-		fmt.Println("Received:", data)
-	default:
-		fmt.Println("No data available.")
-	}
+ select {
+ case data := <-channel:
+  fmt.Println("Received:", data)
+ default:
+  fmt.Println("No data available.")
+ }
 }
 ```
 
@@ -114,19 +114,19 @@ No data available.
 package main
 
 import (
-	"fmt"
-	"time"
+ "fmt"
+ "time"
 )
 
 func main() {
-	channel := make(chan int)
+ channel := make(chan int)
 
-	select {
-	case data := <-channel:
-		fmt.Println("Received:", data)
-	case <-time.After(3 * time.Second):
-		fmt.Println("Timeout occurred.")
-	}
+ select {
+ case data := <-channel:
+  fmt.Println("Received:", data)
+ case <-time.After(3 * time.Second):
+  fmt.Println("Timeout occurred.")
+ }
 }
 ```
 

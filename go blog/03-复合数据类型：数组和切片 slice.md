@@ -1,6 +1,7 @@
 ## 数组
 
 数组有两个特点：
+
 1. 固定长度
 2. 元素类型相同
 
@@ -82,7 +83,7 @@ fmt.Println(a1 == a2, a1 == a3, a2 == a3) // true false false
 ``` go
 // 数组遍历
 for i, n := range e {
-	fmt.Println(i, n)
+ fmt.Println(i, n)
 }
 ```
 
@@ -98,16 +99,16 @@ package main
 import "fmt"
 
 func main() {
-	// 数组复制
-	x := [2]int{10, 20}
-	y := x
-	fmt.Printf("x: %p, %v\n", &x, x) // x: 0xc00012e020, [10 20]
-	fmt.Printf("y: %p, %v\n", &y, y) // y: 0xc00012e030, [10 20]
-	test(x)
+ // 数组复制
+ x := [2]int{10, 20}
+ y := x
+ fmt.Printf("x: %p, %v\n", &x, x) // x: 0xc00012e020, [10 20]
+ fmt.Printf("y: %p, %v\n", &y, y) // y: 0xc00012e030, [10 20]
+ test(x)
 }
 
 func test(a [2]int) {
-	fmt.Printf("a: %p, %v\n", &a, a) // a: 0xc00012e060, [10 20]
+ fmt.Printf("a: %p, %v\n", &a, a) // a: 0xc00012e060, [10 20]
 }
 ```
 
@@ -119,16 +120,16 @@ package main
 import "fmt"
 
 func main() {
-	x := [2]int{10, 20}
+ x := [2]int{10, 20}
 
-	// 传参
-	modify(x)
-	fmt.Println("main: ", x) // main:  [10 20]
+ // 传参
+ modify(x)
+ fmt.Println("main: ", x) // main:  [10 20]
 }
 
 func modify(a [2]int) {
-	a[0] = 30
-	fmt.Println("modify: ", a) // modify:  [30 20]
+ a[0] = 30
+ fmt.Println("modify: ", a) // modify:  [30 20]
 }
 ```
 
@@ -199,7 +200,7 @@ fmt.Printf("b: %v, len: %d, cap: %d\n", b, len(b), cap(b))
 ``` go
 // 切片遍历
 for i, n := range s1 {
-	fmt.Println(i, n)
+ fmt.Println(i, n)
 }
 ```
 
@@ -271,16 +272,16 @@ package main
 import "fmt"
 
 func main() {
-	s9 := []int{5, 4, 3}
+ s9 := []int{5, 4, 3}
 
-	// 传参
-	modify(s9)
-	fmt.Println("main: ", s9) // main:  [30 4 3]
+ // 传参
+ modify(s9)
+ fmt.Println("main: ", s9) // main:  [30 4 3]
 }
 
 func modify(a []int) {
-	a[0] = 30
-	fmt.Println("modify: ", a) // modify:  [30 4 3]
+ a[0] = 30
+ fmt.Println("modify: ", a) // modify:  [30 4 3]
 }
 
 ```
@@ -296,34 +297,3 @@ func modify(a []int) {
 在函数传参过程中，数组如果很大的话，很影响效率，而切片则解决了这个问题，效率更高。
 
 在日常开发中，使用切片的频率会更高一些。
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

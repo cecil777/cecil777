@@ -12,15 +12,15 @@ package main
 import "fmt"
 
 func main() {
-	m := map[string]int{
-		"apple":  1,
-		"banana": 2,
-		"orange": 3,
-	}
+ m := map[string]int{
+  "apple":  1,
+  "banana": 2,
+  "orange": 3,
+ }
 
-	for k, v := range m {
-		fmt.Printf("key=%s, value=%d\n", k, v)
-	}
+ for k, v := range m {
+  fmt.Printf("key=%s, value=%d\n", k, v)
+ }
 }
 
 ```
